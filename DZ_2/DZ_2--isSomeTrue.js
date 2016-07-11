@@ -1,14 +1,16 @@
 function isSomeTrue(sourse, filterFn) {
+	if (!(sourse instanceof Array)) {
+		throw new Error('Первый аргумент не массив.');
+	}
 	if (sourse.length === 0) {
-		throw new Error('Пустой массив.')
+		throw new Error('Пустой массив.');
 	}
-	var isSomeTrueRes = false;
-	for (var i = 0; i < sourse.length; i++) {
-		var localRes = filterFn(sourse[i]);
-		if (localRes === true) {
-			isSomeTrueRes = true;
-		}
+	if (!(filterFn instanceof Function)) {
+		throw new Error('Пустой массив.');
 	}
-	return isSomeTrueRes;
+	for (let i = 0; i < sourse.length; i++) {
+		if (filterFn(sourse[i])) return true;
+	}
+	return false;
 }
 module.exports = isSomeTrue;

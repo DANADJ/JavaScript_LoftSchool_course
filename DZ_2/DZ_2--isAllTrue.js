@@ -1,14 +1,16 @@
 function isAllTrue(sourse, filterFn) {
+	if (!(sourse instanceof Array)) {
+		throw new Error('Первый аргумент не массив.');
+	}
 	if (sourse.length === 0) {
-		throw new Error('Пустой массив.')
+		throw new Error('Пустой массив.');
 	}
-	var isAllTrueRes = true;
-	for (var i = 0; i < sourse.length; i++) {
-		var localRes = filterFn(sourse[i]);
-		if (localRes === false) {
-			isAllTrueRes = false;
-		}
+	if (!(filterFn instanceof Function)) {
+		throw new Error('Пустой массив.');
 	}
-	return isAllTrueRes;
+	for (let i = 0; i < sourse.length; i++) {
+		if (!filterFn(sourse[i])) return false;
+	}
+	return true;
 }
 module.exports = isAllTrue;

@@ -15,11 +15,7 @@ var objA = {
 	prop2: 'value2',
 	prop3: 'value3',
 	prop4: {
-		subProp1: 'sub value1',
-		subProp2: {
-			subSubProp1: 'sub sub value1',
-			subSubProp2: [1, 2, {prop2: 1, prop: 2}, 1]
-		}
+		subProp1: 'sub value1'
 	},
 	prop5: 1000,
 	prop6: new Date(2016, 3, 10),
@@ -39,11 +35,7 @@ var objB = {
 		console.log(this.prop1)
 	},
 	prop4: {
-		subProp1: 'sub value1',
-		subProp2: {
-			subSubProp1: 'sub sub value1',
-			subSubProp2: [1, 2, {prop2: 1, prop: 2}, 1]
-		}
+		subProp1: 'sub value1'
 	},
 	prop8: [1, 2, 3]
 };
@@ -84,36 +76,51 @@ function deepEqual(obj1, obj2) {
 		propObj2 = Object.getOwnPropertyNames(obj2).sort();
 	}
 	function comparison(arrPropsObj1, arrPropsObj2, obj1, obj2) {
-		if (arrPropsObj1.length === arrPropsObj2.length) {
-			for (let i = 0; i < arrPropsObj1.length; i++) {
-				if (arrPropsObj1[i] === arrPropsObj2[i]) {
-					if (typeof obj1[arrPropsObj1[i]] === typeof obj2[arrPropsObj2[i]]) {
-						if (obj1[arrPropsObj1[i]] instanceof Object && obj2[arrPropsObj2[i]] instanceof Object) {
-							if (obj1[arrPropsObj1[i]] instanceof Function && obj2[arrPropsObj2[i]] instanceof Function) {
-								if (obj1[arrPropsObj1[i]].toString() !== obj2[arrPropsObj2[i]].toString()) return false;
+		if (arrPropsObj1.length === arrPropsObj2.length) {//сравниваю длины массивов с именами свойств
+			let compRes = true;//Результат работы функции comparison
+			for (let i = 0; i < arrPropsObj1.length; i++) {//Перебираю все элементы массивов
+				console.log('comparison ' + arrPropsObj1[i]);
+				if (arrPropsObj1[i] === arrPropsObj2[i]) {//Сравниваю i элементы в массиве(имена свойств объектов)
+					if (typeof obj1[arrPropsObj1[i]] === typeof obj2[arrPropsObj2[i]]) {//Сравниваю типы данных значений в объектах
+						if (obj1[arrPropsObj1[i]] instanceof Object && obj2[arrPropsObj2[i]] instanceof Object) {// если тип объект
+							if (obj1[arrPropsObj1[i]] instanceof Function && obj2[arrPropsObj2[i]] instanceof Function) {//прверяю на функц
+								if (obj1[arrPropsObj1[i]].toString() !== obj2[arrPropsObj2[i]].toString()) {
+									compRes = false;//если функции не равны ставлю результату фалсе и выхожу из цикла
+									break;
+								}
 							} else if (obj1[arrPropsObj1[i]] instanceof Date && obj2[arrPropsObj2[i]] instanceof Date) {
-								if (obj1[arrPropsObj1[i]].toString() !== obj2[arrPropsObj2[i]].toString()) return false;
+								if (obj1[arrPropsObj1[i]].toDateString() !== obj2[arrPropsObj2[i]].toDateString()) {
+									compRes = false;//если дата не про не равны ставлю результату фалсе и выхожу из цикла
+									break;
+								}
 							} else {
-								deepEqual(obj1[arrPropsObj1[i]], obj2[arrPropsObj2[i]]);
+								compRes = (deepEqual(obj1[arrPropsObj1[i]], obj2[arrPropsObj2[i]]));
+								if (!compRes) {//если объект или массив вызываю для него рекурсию и проверяю возвращённое значение
+									break;
+								}
 							}
 						} else {
-							if (obj1[arrPropsObj1[i]] !== obj2[arrPropsObj2[i]]) return false;
+							if (obj1[arrPropsObj1[i]] !== obj2[arrPropsObj2[i]]) {
+								compRes = false;
+								break;
+							}
 						}
 					} else {
-						return false;
+						compRes = false;//если не равны имена свойств
+						break
 					}
 				} else {
-					return false;
+					compRes = false;//если не равны имена свойств
+					break
 				}
 			}
-			return true;
+			return compRes;//возвращаю из comparison когда закончился цикл
 		} else {
-			return false;
+			return false;//возвращаю из comparison если не равны масивы по длине
 		}
 	}
-	let result = comparison(propObj1, propObj2, obj1, obj2);
-	console.log('console '+result);
-	return result;
+
+	return comparison(propObj1, propObj2, obj1, obj2);
 }
 
 //console.log([1,2,3].toString() === [1,2,3].toString());

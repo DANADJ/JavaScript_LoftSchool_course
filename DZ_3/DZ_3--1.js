@@ -146,14 +146,14 @@ function slice(arr, begin, end) {
 	return newArr;
 }
 
-let arr5 = [0, 10, 20, 8, 30, 40];
+/*let arr5 = [0, 9, 20, 8, 6, 40];
 function foo5(previousValue, currentValue, index, arr) {
 	return previousValue + currentValue;
 }
-//console.log(arr5.length);
-//console.log(arr5);
-console.log(arr5.reduce(foo5, 1));
-console.log(reduce(arr5, foo5, 1));
+console.log(arr5.length);
+console.log(arr5);
+console.log(arr5.reduce(foo5));
+console.log(reduce(arr5, foo5));*/
 
 /*Метод Reduce*/
 function reduce(arr, func, initialValue) {
@@ -190,37 +190,31 @@ function reduce(arr, func, initialValue) {
 		return singularElem;//возвращаю единственный элемент в массиве, если он в нём один и нет initialValue
 	}
 
-	let previousValue,// создаю локальные переменные
-		currentValueIdx;
+	let previousValue;// создаю локальную переменную для хранения вычисленного значения
+
+	function iterator (prev,curIdx,arr,fn){//создаю функцию, которая будет перебирать массив и вызывать callback функцию
+		let loclPrev = prev;
+		for(let i = curIdx; i < arr.length; i++){
+			if(i in arr){
+				loclPrev = fn(loclPrev,arr[i],i,arr);
+			}
+		}
+		return loclPrev;//возвращаю результат из функции
+	}
 
 	if (arguments.length >= 3) {
-		previousValue = initialValue;
-		currentValueIdx = 0;
+		previousValue = iterator(initialValue,0,arr,func);//так вызываю функцию итератор если передан параметр initialValue
 	} else {
-		currentValueIdx = 1;
-	}
-	function clearArr(array) {
-		let newArr = [];
-		for (let x = 0; x < array.length; x++) {
-			if (x in array) {
-				newArr[newArr.length] = array[x];
-			}
-		}
-		return newArr;
+		previousValue = iterator(arr[0],1,arr,func);//так вызываю функцию итератор если параметр initialValue не передан
 	}
 
-		for(let i = 0; i < arr.length; i++){
-		let newClearArray = clearArr(arr);
-		if (currentValueIdx === 0) {
-			previousValue = func(previousValue, newClearArray[currentValueIdx], currentValueIdx, arr);
-		} else {
-			if (previousValue === undefined) {
-				previousValue = func(newClearArray[0], newClearArray[currentValueIdx], currentValueIdx, arr);
-			} else {
-				previousValue = func(previousValue, newClearArray[currentValueIdx], currentValueIdx, arr);
-			}
-		}
-		currentValueIdx++;
-		}
 	return previousValue;
 }
+
+module.exports = {
+	forEach: forEach,
+	filter: filter,
+	map: map,
+	slice: slice,
+	reduce: reduce
+};

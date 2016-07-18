@@ -30,4 +30,6 @@ function consoleRec(array, something) {
 	if(argument2 <= array.length -1 ) consoleRec(array, argument2);
 }
 
+consoleRec([1,2,3,4,5], 0);
+
 module.exports = consoleRec;

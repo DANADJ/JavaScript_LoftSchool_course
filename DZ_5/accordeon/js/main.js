@@ -6,15 +6,11 @@ var mainJS = (function () {
 
 	/*Функция установки класса .active*/
 	function addActiveClass (elem) {
-		for (var i = 0; i < quantityOfHeadings; i++) {//проверяю каждый элемент массива
+		for (var i = 0; i < quantityOfHeadings; i++) {//проверяю каждый элемент массива с подгруппами
 			if (elem === allItems[i]) {//нахожу конкретную подгруппу по которой кликнули
-				if (elem.className === 'accordeon-item') {//проверяю установленн ли класс active
-					elem.className = 'accordeon-item active';//если нет - устанавливаю
-				} else {
-					elem.className = 'accordeon-item';//если есть - убираю
-				}
+				elem.classList.toggle('active');//добавляю/удаляю класс active
 			} else {
-				allItems[i].className = 'accordeon-item';//всем остальным элементам убираю класс active
+				allItems[i].classList.remove('active');//всем остальным элементам убираю класс active
 			}
 		}
 	}

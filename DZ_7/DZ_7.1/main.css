@@ -1,0 +1,8 @@
+.table {
+	width: 500px;
+	border: 1px solid #000000;
+}
+.table_caption {
+	font-size: 20px;
+	color: #334dff;
+}

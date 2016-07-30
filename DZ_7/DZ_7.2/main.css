@@ -1,0 +1,45 @@
+.table, form {
+	width: 500px;
+	border: 1px solid #000000;
+	margin-bottom: 20px;
+}
+
+.table_caption {
+	font-size: 20px;
+	color: #334dff;
+}
+
+.form {
+	box-sizing: border-box;
+	padding: 10px;
+}
+
+.form-name, .form-value {
+	float: left;
+	width: 300px;
+	margin-right: 8px;
+	margin-bottom: 8px;
+}
+
+.input-name, .input-value {
+	width: 196px;
+}
+
+.form-expires {
+	float: left;
+	width: 170px;
+	margin-bottom: 8px;
+}
+
+.input-expires {
+	width: 54px;
+}
+
+.addButton {
+	width: 170px;
+	background: forestgreen;
+	border: none;
+	border-radius: 3px;
+	cursor: pointer;
+}
+

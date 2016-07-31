@@ -3,8 +3,39 @@
 <head>
 	<meta charset="UTF-8">
 	<title></title>
+	<style>
+		label {
+			display: block;
+			width: 300px;
+			color: #334dff;
+			font-size: 20px;
+			margin: 0 0 5px 20px;
+			text-align: center;
+		}
+
+		input {
+			display: block;
+			width: 300px;
+			height: 30px;
+			border-radius: 5px;
+			margin: 0 0 20px 20px;
+			padding-left: 10px;
+			font-size: 20px;
+		}
+		.hidden {
+			display: none;
+		}
+
+		li {
+			list-style: none;
+		}
+	</style>
 </head>
 <body>
-
+<label for="city">Введите название города</label>
+<input type="text" id="city">
+<ol class="cities">
+</ol>
+<script src="autocomplete.js"></script>
 </body>
 </html>

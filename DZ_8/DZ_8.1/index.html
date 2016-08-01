@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+		label {
+			display: block;
+			width: 300px;
+			color: #334dff;
+			font-size: 20px;
+			margin: 0 0 5px 20px;
+			text-align: center;
+		}
+
+		input {
+			display: block;
+			width: 300px;
+			height: 30px;
+			border-radius: 5px;
+			margin: 0 0 20px 20px;
+			padding-left: 10px;
+			font-size: 20px;
+		}
+
+		.hidden {
+			display: none;
+		}
+
+		ol{
+			width: 300px;
+			margin: 0 0 0 30px;
+			padding: 0;
+		}
+
+		li {
+			list-style: none;
+			cursor: pointer;
+		}
+	</style>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+</head>
+<body>
+<label for="city">Введите название города</label>
+<input type="text" id="city">
+<ol class="cities" id="cities">
+</ol>
+<script type="text/x-handlebars-template" id="city-list">
+	{{#each list}}
+	<li id={{this.toLowerCase}}>{{this}}</li>
+	{{/each}}
+</script>
+<script src="autocomplete.js"></script>
+</body>
+</html>

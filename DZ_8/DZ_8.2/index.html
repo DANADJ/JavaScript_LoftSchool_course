@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<link rel="stylesheet" href="main.css">
+</head>
+<body>
+<header></header>
+<ol class="friends" id="friends-list">
+	<!--<li class="friend" id="">
+		<div class="foto">
+			<img src="" alt="">
+		</div	>
+		<div class="main-info">
+			<div id="name">
+				<div class="info">Александр</div>
+				<div class="info">Обухов</div>
+			</div>
+			<div>
+				<div class="info" id="hbd">15.12.78</div>
+				<div class="info" id="age">37лет</div>
+			</div>
+		</div>
+	</li>-->
+</ol>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+<script src="//vk.com/js/api/openapi.js" type="text/javascript"></script>
+<script type="text/x-handlebars-template" id="friend">
+	{{#each list}}
+	<li class="friend" id="">
+		<div class="foto">
+			<img class="img" src="{{photo_100}}" alt="">
+		</div>
+		<div class="main-info">
+			<div id="name">
+				<div class="info">{{first_name}}</div>
+				<div class="info">{{last_name}}</div>
+			</div>
+			<div>
+				<div class="info" id="hbd">{{bdate}}</div>
+				<div class="info" id="age">Возраст: {{age}}</div>
+			</div>
+		</div>
+	</li>
+	{{/each}}
+</script>
+<script src="main.js" type="text/javascript"></script>
+</body>
+</html>

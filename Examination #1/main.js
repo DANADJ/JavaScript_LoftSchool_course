@@ -197,7 +197,7 @@ var myApp = (function () {
 		if (target) {//если кнопка мыши не опущена и началось перетягивание
 			target.style.top = (event.clientY - offsetY + 'px');//то меняю координаты перетягиваемого элемента
 			target.style.left = (event.clientX - offsetX + 'px');
-			target.style.position = 'absolute';//Вывоожу его из обзего потока DOM
+			target.style.position = 'fixed';//Вывоожу его из обзего потока DOM
 			target.style.boxShadow = '0 0 10px gray';//И слегка меняю внешний вид
 			target.style.borderRadius = '5px';
 		}

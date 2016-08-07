@@ -5,13 +5,13 @@ var myApp = (function () {
 	var dataLS = getLocalStorage(),//Данные из LS
 		dataVK,//Данные из VK.COM
 		arrForFind,//Массив для поиска отфильтрованный от уже добавленных друзей
-		parentSpace,//Пространство над который мы взят перетягиваемый элемент
+		parentList,//Список из которого был взят перетягиваемый элемент
 		target,//Перетягиваемый элемент
 		offsetX = 0,//Смещение от указателя до перетягиваемого элемента
 		offsetY = 0,//Смещение от указателя до перетягиваемого элемента
+		conteiner = document.getElementById('conteiner'),//Тело всего приложения
 		inputFind = document.getElementById('findFriend'),//Поле поиска друзей в списке VK
 		inputName = document.getElementById('nameList'),//Поле ввода названия Моего списка друзей
-		mainSpace = document.getElementById('main'),//Основное пространство где отслеживается Drag AND Drop
 		loadPage = pageReady();//Промис полной загрузки страницы
 
 	/*Функция запуска не асинхронного кода*/
@@ -102,8 +102,8 @@ var myApp = (function () {
 		}
 	}
 
-	/*Функция определения клика и запуска соответствующего действия*/
-	function whereClick(event) {
+	/*Функция отслеживания отпускания левой клавиши мыши и запуска соответствующего действия*/
+	function whereMouseUp(event) {
 		event.preventDefault();
 		if (event.target.id == 'close') {
 			window.close();
@@ -113,6 +113,8 @@ var myApp = (function () {
 			addFriend(event.target.closest('li'));
 		} else if (event.target.id == 'addOrDelButton' && event.target.closest('ul').id == 'myListFriends') {
 			delFriend(event.target.closest('li'));
+		} else if (target) {//Если кнопка отпущена и перетягиваемы элемент существовал
+			finishDragAndDrop(event);
 		}
 	}
 
@@ -185,7 +187,7 @@ var myApp = (function () {
 		if (!event.target.classList.contains('addOrDelButton')) {//если кнопка нажата не на добавляющий/удаляющий элемент...
 			if (event.target.parentNode.classList.contains('listItem')) {//...то если род.элем имеет сласс listItem...
 				target = event.target.closest('li');//...Создаю перетягиваемый элемент
-				parentSpace = target.closest('ul').id;//...Запоминаю в каком списке он был взят
+				parentList = target.closest('ul').id;//...Запоминаю в каком списке он был взят
 				offsetX = event.offsetX;//...Получаю размеры смещения
 				offsetY = event.offsetY;
 			}
@@ -215,32 +217,29 @@ var myApp = (function () {
 	}
 
 	/*Функцыя отслеживания отпускания левой клавиши мыши*/
-	function mouseUp(event) {
-		if (target) {//Если кнопка отпущена и перетягиваемы элемент существовал
-			var space = getFinishSpace(event);//узнаю над какой областью был отпущен элемент
-			if (space != parentSpace && space == 'myListFriends') {//если элемент был перенесён из списка VK в мой список
-				target.removeAttribute('style');
-				addFriend(target);//добавляю его в мой список
-			} else if (space != parentSpace && space == 'vkListFriends') {//если элемент перенесён из моего списка в список VK
-				target.removeAttribute('style');
-				delFriend(target);//Удаляю его из моего списка
-			}
-			//Во всех других случаях просто привожу перетаскиваемый элемент в состоянию до перетаскивания
-			target.removeAttribute('style');//Удаляю все стили которые нужны были для отображения перетаскивания
-			target = null;
-			parentSpace = null;
-			offsetX = 0;
-			offsetY = 0;
+	function finishDragAndDrop(event) {
+		var space = getFinishSpace(event);//узнаю над какой областью был отпущен элемент
+		if (space != parentList && space == 'myListFriends') {//если элемент был перенесён из списка VK в мой список
+			target.removeAttribute('style');
+			addFriend(target);//добавляю его в мой список
+		} else if (space != parentList && space == 'vkListFriends') {//если элемент перенесён из моего списка в список VK
+			target.removeAttribute('style');
+			delFriend(target);//Удаляю его из моего списка
 		}
+		//Во всех других случаях просто привожу перетаскиваемый элемент в состоянию до перетаскивания
+		target.removeAttribute('style');//Удаляю все стили которые нужны были для отображения перетаскивания
+		target = null;
+		parentList = null;
+		offsetX = 0;
+		offsetY = 0;
 	}
 
 	/*Функция прослушивания событий*/
 	function _addEventListeners() {
-		document.getElementById('conteiner').addEventListener('click', whereClick);//Слежу за кликами во всём теле приложения
+		conteiner.addEventListener('mouseup', whereMouseUp);//Слежу за кликами во всём теле приложения
+		conteiner.addEventListener('mousedown', mouseDown);//Слежу за удержанием клавиши мыши
+		conteiner.addEventListener('mousemove', mouseMove);//Слежу за перетягиванием элемента
 		inputFind.addEventListener('input', findFriend);//слежу за вводом в строку поиска
-		mainSpace.addEventListener('mousedown', mouseDown);
-		mainSpace.addEventListener('mousemove', mouseMove);
-		mainSpace.addEventListener('mouseup', mouseUp);
 	}
 
 	/*Функция отфильтровки поискового масива от лишних элементов*/
@@ -259,7 +258,7 @@ var myApp = (function () {
 		}).then(function (answer) {
 			filterVKListFriends(answer);//Фильтрую и вывожу список друзей пользователя из VK.COM
 			arrForFind = filter(Array.prototype.slice.call(document.querySelectorAll('#vkListFriends .listItem')));//создаю массив
-			//МАССИВ для поиска и отфильтровываю от него друзей которые уже добавлены в МОЙ СПИСОК
+			//для поиска и отфильтровываю от него друзей которые уже добавлены в МОЙ СПИСОК
 		})
 	}
 

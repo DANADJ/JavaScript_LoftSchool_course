@@ -12,7 +12,8 @@ var myApp = (function () {
 		conteiner = document.getElementById('conteiner'),//Тело всего приложения
 		inputFind = document.getElementById('findFriend'),//Поле поиска друзей в списке VK
 		inputName = document.getElementById('nameList'),//Поле ввода названия Моего списка друзей
-		loadPage = pageReady();//Промис полной загрузки страницы
+		myListFriends = document.getElementById('myListFriends');//Мои список в DOM
+	loadPage = pageReady();//Промис полной загрузки страницы
 
 	/*Функция запуска не асинхронного кода*/
 	function start() {
@@ -110,9 +111,9 @@ var myApp = (function () {
 		} else if (event.target.id == 'saveList') {
 			save();
 		} else if (event.target.id == 'addOrDelButton' && event.target.closest('ul').id == 'vkListFriends') {
-			addFriend(event.target.closest('li'));
+			addOrDel(event.target.closest('li'), true);
 		} else if (event.target.id == 'addOrDelButton' && event.target.closest('ul').id == 'myListFriends') {
-			delFriend(event.target.closest('li'));
+			addOrDel(event.target.closest('li'), false);
 		} else if (target) {//Если кнопка отпущена и перетягиваемы элемент существовал
 			finishDragAndDrop(event);
 		}
@@ -130,28 +131,24 @@ var myApp = (function () {
 		}
 	}
 
-	/*Функция добавления друга в 'Мой список'*/
-	function addFriend(elem) {//принимает на вход елемент DOM дерева
-		document.getElementById('myListFriends').appendChild(elem.cloneNode(true));//добавляю в мой список в DOM именно клон элемента
-		var dataId = elem.getAttribute('data-id'),//получаю ID добавляемого друга
-			newElemLS = dataVK.find(function (elem) {//нахожу этого друга в списке данных из VK...
+	function addOrDel(elem, action) {//принимает на вход елемент DOM дерева, и флаг добавления/удаления
+		var dataId = elem.getAttribute('data-id'), //получаю ID добавляемого друга
+			elemLS;//готовлю переменную под обрабатываемый элемент
+		if (action) {//если нужно добавить элемент
+			myListFriends.appendChild(elem.cloneNode(true));//добавляю его в мой список в DOM именно клон элемента
+			elemLS = dataVK.find(function (elem) {//нахожу этого друга в списке данных из VK...
 				return elem.uid == this;
 			}, dataId);
-		dataLS.list.push(newElemLS);//...добавляю объекта этого друга в мой список в LS
-		elem.classList.toggle('added');//добавляю элементу списка VK в DOM скрывающий класс
-		arrForFind = filter(Array.prototype.slice.call(document.querySelectorAll('#vkListFriends .listItem')));//Перефильтровываю массив для поиска
-	}
-
-	/*Функция удаления друга из 'Мой список'*/
-	function delFriend(elem) {//принимает на вход елемент DOM дерева
-		var dataId = elem.getAttribute('data-id');//получаю ID удаляемого друга
-		document.getElementById('myListFriends').removeChild(elem);//удаляю его из моего списка в DOM
+			dataLS.list.push(elemLS);//... и добавляю его в список данных в LS
+		} else {//если нужно удолить элемент
+			myListFriends.removeChild(elem);//удаляю его из моего списка в DOM
+			elemLS = dataLS.list.findIndex(function (elem) {//нахожу этого друга в списке в LS по его ID
+				return elem.uid == this;
+			}, dataId);
+			dataLS.list.splice(elemLS, 1);//... и удаляю его из этого списка
+		}
 		document.querySelector('[data-id ="' + dataId + '"]').classList.toggle('added');//Нахожу в списке VK в DOM этого друга и
-		// отображаю его
-		var rmElemLS = dataLS.list.findIndex(function (elem) {//нахожу этого друга в списке в LS по его ID
-			return elem.uid == this;
-		}, dataId);
-		dataLS.list.splice(rmElemLS, 1);//... и удаляю его из этого списка
+		// отображаю/скрываю его
 		arrForFind = filter(Array.prototype.slice.call(document.querySelectorAll('#vkListFriends .listItem')));//Перефильтровываю массив для поиска
 	}
 
@@ -219,19 +216,13 @@ var myApp = (function () {
 	/*Функцыя отслеживания отпускания левой клавиши мыши*/
 	function finishDragAndDrop(event) {
 		var space = getFinishSpace(event);//узнаю над какой областью был отпущен элемент
+			target.removeAttribute('style');
 		if (space != parentList && space == 'myListFriends') {//если элемент был перенесён из списка VK в мой список
-			target.removeAttribute('style');
-			addFriend(target);//добавляю его в мой список
+			addOrDel(target, true);
 		} else if (space != parentList && space == 'vkListFriends') {//если элемент перенесён из моего списка в список VK
-			target.removeAttribute('style');
-			delFriend(target);//Удаляю его из моего списка
+			addOrDel(target, false);
 		}
-		//Во всех других случаях просто привожу перетаскиваемый элемент в состоянию до перетаскивания
-		target.removeAttribute('style');//Удаляю все стили которые нужны были для отображения перетаскивания
 		target = null;
-		parentList = null;
-		offsetX = 0;
-		offsetY = 0;
 	}
 
 	/*Функция прослушивания событий*/

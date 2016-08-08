@@ -112,9 +112,17 @@ var myApp = (function () {
 			save();
 		} else if (event.target.id == 'addOrDelButton' && event.target.closest('ul').id == 'vkListFriends') {
 			addOrDel(event.target.closest('li'), true);
+			arrForFind = filter(Array.prototype.slice.call(document.querySelectorAll('#vkListFriends .listItem')));//Перефильтровываю массив для поиска
 		} else if (event.target.id == 'addOrDelButton' && event.target.closest('ul').id == 'myListFriends') {
 			addOrDel(event.target.closest('li'), false);
-		} else if (target) {//Если кнопка отпущена и перетягиваемы элемент существовал
+			arrForFind = filter(Array.prototype.slice.call(document.querySelectorAll('#vkListFriends .listItem')));//Перефильтровываю массив для поиска
+		} else if (event.target.id == 'addAll') {
+			addAll('#vkListFriends', true);
+			arrForFind = filter(Array.prototype.slice.call(document.querySelectorAll('#vkListFriends .listItem')));//Перефильтровываю массив для поиска
+		} else if (event.target.id == 'delAll') {
+			addAll('#myListFriends', false);
+			arrForFind = filter(Array.prototype.slice.call(document.querySelectorAll('#vkListFriends .listItem')));//Перефильтровываю массив для поиска
+		} else if (target) {//Если кнопка отпущена и перетягиваемый элемент существовал
 			finishDragAndDrop(event);
 		}
 	}
@@ -131,6 +139,22 @@ var myApp = (function () {
 		}
 	}
 
+	/*CB функция в функцию для добавления всех друзей*/
+	function cbAddAll(elem) {
+		return !elem.classList.contains('added');
+	}
+
+	/*Функция добавления или удаления всех друзей в/из формируемого списка*/
+	function addAll(list, action) {
+		var actionList = Array.prototype.slice.call(document.querySelectorAll(list + ' .listItem'));
+		if (actionList.some(cbAddAll)) {
+			actionList.filter(cbAddAll).forEach(function (elem) {
+				addOrDel(elem, action);
+			});
+		}
+	}
+
+	/*Функция добавления или удаления элемента по одному*/
 	function addOrDel(elem, action) {//принимает на вход елемент DOM дерева, и флаг добавления/удаления
 		var dataId = elem.getAttribute('data-id'), //получаю ID добавляемого друга
 			elemLS;//готовлю переменную под обрабатываемый элемент
@@ -149,7 +173,6 @@ var myApp = (function () {
 		}
 		document.querySelector('[data-id ="' + dataId + '"]').classList.toggle('added');//Нахожу в списке VK в DOM этого друга и
 		// отображаю/скрываю его
-		arrForFind = filter(Array.prototype.slice.call(document.querySelectorAll('#vkListFriends .listItem')));//Перефильтровываю массив для поиска
 	}
 
 	/*Функция поиска*/

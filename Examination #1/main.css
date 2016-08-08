@@ -47,7 +47,7 @@ body {
 	box-sizing: border-box;
 	margin: 0;
 	padding: 0;
-	width: 49.83871%;
+	width: 309px;
 }
 
 .wrapperInput {
@@ -76,14 +76,19 @@ body {
 	background-color: #ffffff;
 }
 
-.headerList {
+.headerList, .headerList_content {
 	box-sizing: border-box;
 	height: 32px;
 	border: none;
 	border-bottom: 1px solid #f0f0f0;
 	margin: 1px 0 0 0;
+}
+
+.headerList_content {
+	margin: 0;
 	line-height: 16px;
 	padding: 8px 0;
+	border: none;
 }
 
 .wrapperListFriends {
@@ -116,7 +121,8 @@ body {
 	font-size: 14px;
 	cursor: pointer;
 }
-.listItem:hover{
+
+.listItem:hover {
 	background: rgba(240, 240, 240, 0.92);
 }
 
@@ -134,7 +140,7 @@ body {
 	width: 100%;
 }
 
-.name{
+.name {
 	box-sizing: border-box;
 	width: 260px;
 	height: 64px;
@@ -144,7 +150,7 @@ body {
 	word-wrap: break-word;
 }
 
-.addOrDelButton{
+.addOrDelButton, .addOrDelAll {
 	width: 16px;
 	height: 16px;
 	border: none;
@@ -153,11 +159,22 @@ body {
 	cursor: pointer;
 }
 
-#vkListFriends .addOrDelButton{
+.addOrDelAll {
+	margin: 8px 6px;
+}
+
+.addAll{
+	background: none, url("./img/addAll.png");
+}
+.delAll{
+	background: none, url("./img/delAll.png");
+}
+
+#vkListFriends .addOrDelButton {
 	background: none, url("./img/plus.png");
 }
 
-#myListFriends .addOrDelButton{
+#myListFriends .addOrDelButton {
 	background: none, url("./img/closeGray.png");
 }
 
@@ -184,4 +201,5 @@ body {
 .added, .hidden {
 	display: none;
 }
-input:focus, button:focus {outline: none}
+
+input:focus, button:focus { outline: none }

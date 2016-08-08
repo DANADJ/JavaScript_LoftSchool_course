@@ -12,8 +12,8 @@ var myApp = (function () {
 		conteiner = document.getElementById('conteiner'),//Тело всего приложения
 		inputFind = document.getElementById('findFriend'),//Поле поиска друзей в списке VK
 		inputName = document.getElementById('nameList'),//Поле ввода названия Моего списка друзей
-		myListFriends = document.getElementById('myListFriends');//Мои список в DOM
-	loadPage = pageReady();//Промис полной загрузки страницы
+		myListFriends = document.getElementById('myListFriends'),//Мои список в DOM
+		loadPage = pageReady();//Промис полной загрузки страницы
 
 	/*Функция запуска не асинхронного кода*/
 	function start() {
@@ -216,7 +216,7 @@ var myApp = (function () {
 	/*Функцыя отслеживания отпускания левой клавиши мыши*/
 	function finishDragAndDrop(event) {
 		var space = getFinishSpace(event);//узнаю над какой областью был отпущен элемент
-			target.removeAttribute('style');
+		target.removeAttribute('style');
 		if (space != parentList && space == 'myListFriends') {//если элемент был перенесён из списка VK в мой список
 			addOrDel(target, true);
 		} else if (space != parentList && space == 'vkListFriends') {//если элемент перенесён из моего списка в список VK

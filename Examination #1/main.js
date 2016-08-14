@@ -139,19 +139,24 @@ var myApp = (function () {
 		}
 	}
 
-	/*CB функция в функцию для добавления всех друзей*/
+	/*CB функция проверки отсутствия класса*/
 	function cbAddAll(elem) {
-		return !elem.classList.contains('added');
+		return !elem.classList.contains(this);
 	}
 
 	/*Функция добавления или удаления всех друзей в/из формируемого списка*/
 	function addAll(list, action) {
-		var actionList = Array.prototype.slice.call(document.querySelectorAll(list + ' .listItem'));
-		if (actionList.some(cbAddAll)) {
-			actionList.filter(cbAddAll).forEach(function (elem) {
-				addOrDel(elem, action);
+		var actionList = Array.prototype.slice.call(document.querySelectorAll(list + ' .listItem'));//Создаю полноценный массив с
+		// элементами списка друзей VK.COM
+		if (actionList.some(cbAddAll, 'added')) {//если есть хоть один элемент не добавленый в свой список, то обрабатываю его/их
+			actionList = actionList.filter(cbAddAll, 'added');//удаляю из рабоего массива уже добавленных друзей
+			if (!actionList.every(cbAddAll, 'hidden')) {//если хоть у одного есть класс HIDDEN, значит работает поиск,
+				actionList = actionList.filter(cbAddAll, 'hidden');//удаляю из рабочего массива друзей не проходящих поиск
+			}
+			actionList.forEach(function (elem) {
+				addOrDel(elem, action);//добавляю всех дурезей из рабочего массива в свой список
 			});
-		}
+		}//если все друзья добавлены ничего не делаю
 	}
 
 	/*Функция добавления или удаления элемента по одному*/

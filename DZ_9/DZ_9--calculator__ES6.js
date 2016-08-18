@@ -79,31 +79,37 @@ class Calculator {
 
 /*Класс Квадратный калькулятор (наследник) наследуется от класса Калькулятор*/
 class SqrCalc extends Calculator {
-
+	constructor(baseNumber){
+		super(baseNumber);
+		this.preResult = undefined;
+	}
 //Добавление наследнику метода возведения в квадрат
-	sqr(method, arg) {
-		let res = method.apply(this, arg);
-		return res * res;
+	sqr() {
+		return this.preResult * this.preResult;
 	}
 
 //Переопределение метода сложения у наследника
 	sum() {
-		return this.sqr(super.sum, arguments);
+		this.preResult = super.sum.apply(this, arguments);
+		return this.sqr();
 	}
 
 //Переопределение метода вычитания у наследника
 	dif() {
-		return this.sqr(Calculator.prototype.dif, arguments);
+		this.preResult = super.dif.apply(this, arguments);
+		return this.sqr();
 	}
 
 //Переопределение метода деления у наследника
 	div() {
-		return this.sqr(super.div, arguments)
+		this.preResult = super.div.apply(this, arguments);
+		return this.sqr();
 	}
 
 //Переопределение метода сумножения у наследника
 	mul() {
-		return this.sqr(super.mul, arguments);
+		this.preResult = super.mul.apply(this, arguments);
+		return this.sqr();
 	}
 }
 
